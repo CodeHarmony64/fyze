@@ -1,0 +1,33 @@
+version: '3.8'
+
+services:
+  postgres:
+    image: postgres:latest
+    container_name: fyze_postgres
+    environment:
+      POSTGRES_USER: fyze
+      POSTGRES_PASSWORD: fyze
+      POSTGRES_DB: fyze
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile  # Path to your Dockerfile
+    image: fyze  # The name of the built image
+    container_name: fyze_app
+    ports:
+      - "8080:8080"  # Expose the application port
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/fyze
+      SPRING_DATASOURCE_USERNAME: fyze
+      SPRING_DATASOURCE_PASSWORD: fyze
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:
+    driver: local
