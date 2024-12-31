@@ -43,14 +43,14 @@ public class StockController {
 				HttpStatus.OK);
 	}
 
-	@GetMapping(value = { "/{stockId}" })
-	public ResponseEntity<ApiResponse<Stock>> getStockById(@PathVariable Long stockId) {
-		Optional<Stock> stock = stockService.getStock(stockId);
+	@GetMapping(value = { "/{stockTicker}" })
+	public ResponseEntity<ApiResponse<Stock>> getStockById(@PathVariable String stockTicker) {
+		Optional<Stock> stock = stockService.getStockByTicker(stockTicker);
 		if (stock.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Stock not found");
 		}
 		return new ResponseEntity<>(
-				ApiResponse.<Stock>builder().message("Stock saved successfully").data(stock.get()).build(),
+				ApiResponse.<Stock>builder().message("Stock fetched successfully").data(stock.get()).build(),
 				HttpStatus.OK);
 	}
 

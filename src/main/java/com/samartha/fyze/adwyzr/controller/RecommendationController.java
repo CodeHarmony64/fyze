@@ -2,6 +2,7 @@ package com.samartha.fyze.adwyzr.controller;
 
 import com.samartha.fyze.adwyzr.dto.ConsolidatedBuyRecommendation;
 import com.samartha.fyze.adwyzr.dto.base.response.ApiResponse;
+import com.samartha.fyze.adwyzr.dto.recommendation.RecommendationCreationUpdationRequest;
 import com.samartha.fyze.adwyzr.model.Recommendation;
 import com.samartha.fyze.adwyzr.service.RecommendationService;
 import org.springframework.http.HttpStatus;
@@ -22,8 +23,10 @@ public class RecommendationController {
 	}
 
 	@PostMapping(value = { "", "/" })
-	public ResponseEntity<ApiResponse<Recommendation>> saveRecommendation(@RequestBody Recommendation recommendation) {
-		Recommendation savedRecommendation = recommendationService.saveRecommendation(recommendation);
+	public ResponseEntity<ApiResponse<Recommendation>> saveRecommendation(
+			@RequestBody RecommendationCreationUpdationRequest recommendationCreationUpdationRequest) {
+		Recommendation savedRecommendation = recommendationService
+				.saveRecommendation(recommendationCreationUpdationRequest);
 		return new ResponseEntity<>(ApiResponse.<Recommendation>builder().data(savedRecommendation)
 				.message("Recommendation saved successfully").build(), HttpStatus.OK);
 	}

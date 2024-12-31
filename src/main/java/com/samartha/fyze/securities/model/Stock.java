@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 @EqualsAndHashCode(callSuper = true)
 @NoArgsConstructor
 @Entity
-@Table(name = "stocks")
+@Table(name = "stocks", uniqueConstraints = @UniqueConstraint(columnNames = { "exchange", "symbol" }))
 public class Stock extends BaseModel {
 
 	@Id

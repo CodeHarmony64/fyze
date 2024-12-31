@@ -9,7 +9,9 @@ import java.util.Map;
 import java.util.Objects;
 import java.util.stream.Collectors;
 
+import com.samartha.fyze.adwyzr.dto.recommendation.RecommendationCreationUpdationRequest;
 import com.samartha.fyze.securities.repo.StockRepo;
+import com.samartha.fyze.securities.service.StockService;
 import org.springframework.data.domain.Example;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.lang.Nullable;
@@ -30,15 +32,21 @@ public class RecommendationService {
 
 	private final AdvisorRepo advisorRepo;
 
-	private final StockRepo stockRepo;
+	private final StockService stockService;
 
-	RecommendationService(RecommendationRepo recommendationRepo, AdvisorRepo advisorRepo, StockRepo stockRepo) {
+	RecommendationService(RecommendationRepo recommendationRepo, AdvisorRepo advisorRepo, StockService stockService) {
 		this.recommendationRepo = recommendationRepo;
 		this.advisorRepo = advisorRepo;
-		this.stockRepo = stockRepo;
+		this.stockService = stockService;
 	}
 
-	public Recommendation saveRecommendation(Recommendation recommendation) {
+	public Recommendation saveRecommendation(
+			RecommendationCreationUpdationRequest recommendationCreationUpdationRequest) {
+		if (recommendationCreationUpdationRequest.getStockId() == null) {
+			recommendationCreationUpdationRequest.setStockId(stockService
+					.getStockByTicker(recommendationCreationUpdationRequest.getStockTicker()).get().getId());
+		}
+		Recommendation recommendation = recommendationCreationUpdationRequest.toRecommendation();
 		// If a Sell recommendation, then close existing Buy & Hold Recommendation
 		Recommendation savedRecommendation = recommendationRepo.save(recommendation);
 		if (Rating.SELL.equals(recommendation.getRating())) {
@@ -151,7 +159,7 @@ public class RecommendationService {
 	// Note: We don't want to user this function. Since we don't want only buy
 	// recommendations to be shown for given stock but also the sell recommendations.
 	public List<ConsolidatedBuyRecommendation> getLastKAdvisorActiveRecommendationForGivenStock(Long stockId, int k) {
-		Stock stock = stockRepo.findById(stockId).orElseThrow(() -> new RuntimeException("Stock not found"));
+		Stock stock = stockService.getStock(stockId).orElseThrow(() -> new RuntimeException("Stock not found"));
 		List<Recommendation> recommendations = recommendationRepo
 				.findLastKAdvisorActiveRecommendationForStockId(stockId, k);
 		Map<Advisor, List<Recommendation>> stockRecommendationsMap = recommendations.stream()

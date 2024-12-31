@@ -12,7 +12,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
 
 	@ExceptionHandler(Exception.class)
 	public ResponseEntity<ApiResponse> handleException(Exception e) {
-		return new ResponseEntity<>(ApiResponse.<Void>builder().message("Something went wrong").build(),
+		return new ResponseEntity<>(ApiResponse.<Void>builder().message(e.getMessage()).build(),
 				HttpStatus.INTERNAL_SERVER_ERROR);
 	}
 
