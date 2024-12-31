@@ -11,9 +11,10 @@ import java.util.List;
 
 @Repository
 public interface StockRepo extends JpaRepository<Stock, Long> {
-    @Query("SELECT s FROM Stock s WHERE "
-            + "LOWER(s.symbol) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
-            + "LOWER(s.shortName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
-            + "LOWER(s.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
-    List<Stock> searchStocks(@Param("searchTerm") String searchTerm);
+
+	@Query("SELECT s FROM Stock s WHERE " + "LOWER(s.symbol) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
+			+ "LOWER(s.shortName) LIKE LOWER(CONCAT('%', :searchTerm, '%')) OR "
+			+ "LOWER(s.fullName) LIKE LOWER(CONCAT('%', :searchTerm, '%'))")
+	List<Stock> searchStocks(@Param("searchTerm") String searchTerm);
+
 }

@@ -10,24 +10,27 @@ import java.util.Optional;
 
 @Service
 public class StockService {
-    private final StockRepo repo;
-    StockService(StockRepo repo){
-        this.repo = repo;
-    }
 
-    public Stock saveStock(Stock stock){
-        return repo.saveAndFlush(stock);
-    }
+	private final StockRepo repo;
 
-    public Optional<Stock> getStock(Long stockId){
-        return repo.findById(stockId);
-    }
+	StockService(StockRepo repo) {
+		this.repo = repo;
+	}
 
-    public List<Stock> getAllStocks(int page, int size){
-        return repo.findAll(PageRequest.of(page, size)).getContent();
-    }
+	public Stock saveStock(Stock stock) {
+		return repo.saveAndFlush(stock);
+	}
 
-    public List<Stock> searchStock(String searchTerm){
-        return repo.searchStocks(searchTerm);
-    }
+	public Optional<Stock> getStock(Long stockId) {
+		return repo.findById(stockId);
+	}
+
+	public List<Stock> getAllStocks(int page, int size) {
+		return repo.findAll(PageRequest.of(page, size)).getContent();
+	}
+
+	public List<Stock> searchStock(String searchTerm) {
+		return repo.searchStocks(searchTerm);
+	}
+
 }
